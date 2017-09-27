@@ -1,0 +1,747 @@
+FORMAT: 1A
+HOST: http://cml.com/
+
+# CML Specification
+
+This is a CML API v1 Sec
+
+# Group Service Management API
+API for service management
+
+## ServiceTypes [/v1/serviceTypes]
+This is a group of all REST resources related to available service types. Services offered by service providers have to be classified with one of these service types.
+
+### List all ServiceTypes [GET]
+
++ Response 200 (application/json)
+
+        [
+            {
+                "id": "1",
+                "name": "Transportation Service Type",
+                "uri": "Transportation/"
+            }, {
+                "id": "2",
+                "name": "Routing Service Type",
+                "uri": "Routing/"
+            }, {
+                "id": "3",
+               "name": "Payment Service Type",
+               "uri": "Payment/"
+            }, {
+                "id": "4",
+                "name": "Environment Service Type",
+                "uri": "Environment/"
+            }, {
+                "id": "5",
+                "name": "Info Service Type",
+                "uri": "Info/"
+            }
+        ]
+        
+## ServiceCategories [/v1/serviceTypes/{id}/serviceCategories]
+This is a group of all REST resources related to available service categories in a specific service type. Services offered by service providers have to be classified with one of these service categories.
+
+### List all ServiceCategories in a ServiceType with a specific {id} [GET]
+
++ Parameters
+    + id (number, `1`) ... service type id.
+
++ Response 200 (application/json)
+
+        [
+            {
+                "name": "Taxi",
+                "uri": "Transportation/Taxi/"
+            }, {
+                "name": "CarSharing",
+                "uri": "Transportation/CarSharing/"
+            }, {
+               "name": "BikeSharing",
+               "uri": "Transportation/BikeSharing/"
+            }, {
+                "name": "ScooterSharing",
+                "uri": "Transportation/ScooterSharing/"
+            }, {
+                "name": "PublicTransport",
+                "uri": "Transportation/PublicTransport/"
+            }, {
+                "name": "Flights",
+                "uri": "Transportation/Flights/"
+            }
+        ]        
+
+## ServiceCategories in Transportation [/Transportation]
+
+### List All ServiceCategories in Transportation [GET]
+
++ Response 200 (application/json)
+
+        [
+
+            {
+                "name": "Taxi",
+                "uri": "Transportation/Taxi/"
+            }, {
+                "name": "CarSharing",
+                "uri": "Transportation/CarSharing/"
+            }, {
+               "name": "BikeSharing",
+               "uri": "Transportation/BikeSharing/"
+            }, {
+                "name": "ScooterSharing",
+                "uri": "Transportation/ScooterSharing/"
+            }, {
+                "name": "PublicTransport",
+                "uri": "Transportation/PublicTransport/"
+            }, {
+                "name": "Flying",
+                "uri": "Transportation/Flying/"
+            }
+        ]
+        
+## ServiceCategories in Routing [/Routing]
+
+### List All ServiceCategories in Routing [GET]
+
++ Response 200 (application/json)
+
+        [
+            {
+                "name": "CarRouting",
+                "uri": "Routing/CarRouting/"
+            }, {
+                "name": "PublicTransportRouting",
+                "uri": "Routing/PublicTransportRouting/"
+            }, {
+               "name": "MultimodalRouting",
+               "uri": "Routing/MultimodalRouting/"
+            }, {
+                "name": "TrackingRouting",
+                "uri": "Routing/TrackingRouting/"
+            }
+        ]
+        
+## ServiceCategories in Payment [/Payment]
+
+### List All ServiceCategories in Payment [GET]
+
++ Response 200 (application/json)
+
+        [
+            {
+                "name": "Ticketing",
+                "uri": "Payment/Ticketing/"
+            }
+        ]
+       
+## ServiceCategories in Environment [/Environment]
+
+### List All ServiceCategories in Environment [GET]
+
++ Response 200 (application/json)
+
+        [
+            {
+                "name": "Parking",
+                "uri": "Environment/CarRouting/"
+            }, {
+                "name": "EVCharging",
+                "uri": "Environment/EVCharging/"
+            }, {
+               "name": "Accommodation",
+               "uri": "Environment/Accommodation/"
+            }, {
+                "name": "Eventing",
+                "uri": "Environment/Entertainment/"
+            }
+        ]
+       
+## ServiceCategories in Info [/Info]
+
+### List All ServiceCategories in Info [GET]
+
++ Response 200 (application/json)
+
+        [
+            {
+                "name": "Weather",
+                "uri": "Info/Weather/"
+            }, {
+                "name": "EVCharging",
+                "uri": "Info/Traffic/"
+            }
+        ]
+      
+# Group CarSharing
+contains all CarSharing related resources
+
+## CarSharing Providers [/v1/Transportation/CarSharing]
+a collection of CarSharing Providers
+
+### List all CarSharing Providers [GET]
+
++ Response 200 (application/json)
+
+        [
+            {
+                "id": "1",
+                "name": "BMW",
+                "type": "floating",
+                "uri": "Transportation/CarSharing/1"
+            }, {
+                "id": "2",
+                "name": "VW",
+                "type": "stationBased",
+                "uri": "Transportation/CarSharing/2"
+            }
+        ]
+        
+## CarSharing Provider [/v1/Transportation/CarSharing/{provider_id}]
+Details to one specific CarSharing Provider
+
++ Parameters
+    + provider_id (number, `1`) - ID of CarSharing Service Provider.
+
+### List CarSharing Provider Details [GET]
+
++ Response 200 (application/json)
+
+        {
+            "id": "1",
+            "name": "BMW",
+            "type": "floating",
+            "actions": [
+                {
+                    "name": "subscribe",
+                    "method": "POST",
+                    "uri": "just an idea! /v1/Transportation/CarSharing/1/Process?action=subscribe"
+                }
+            ]
+        }
+
+## CarSharing FloatingCars [/v1/Transportation/CarSharing/Cars?lat={lat}&lng={lng}&radius={radius}&f_cars={fuelType}]
+This collection contains a list of all floating cars in an area of interest specified by query parameters.
+
+The area of interest can be defined circle or box. The search can be filtered using fultext or one of the resource parameters.
+* an (optional) bounding circle (lat={lat}&lng={lng}&radius={radius})
+* an (optional) bounding box (left_lower_lat={min_lat}&left_lower_lng={min_lng}&right_upper_lat={max_lat}&right_upper_lng={max_lng})
+* an (optional) fuel type filter (f_cars={fuelTypeJson})
+
+### List all floating cars in an area [GET]
+
++ Parameters
+    + lat (number, `52.52`) ... latitude value.
+    + lng (number, `13.39`) ... longitude value.
+    + radius (number, `500`) ... radius in meter.
+    + fuelType (optional, string, `{"fuelType":"ELECTRICITY"}`).
+
++ Response 200 (application/json)
+
+        [
+            {
+                "id": 1,
+                "description": "Citroën",
+                "model": "Citroën C-Zero ",
+                "type": "CarSharingCar",
+                "uri": "Transportation/CarSharing/Cars/1",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [ 13.3706283, 52.526275]
+                }
+            }, 
+            {
+                "id": 2,
+                "description": "BMW",
+                "model": "BMW 3",
+                "type": "CarSharingCar",
+                "uri": "Transportation/CarSharing/Cars/2",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [ 13.3706283, 52.526275]
+                }
+            }
+        ]
+           
+## CarSharing Stations [/v1/Transportation/CarSharing/Stations?lat={lat}&lng={lng}&radius={radius}]
+This collection contains a list of all CarSharing Stations in an area of interest specified by query parameters.
+
+The area of interest can be defined circle or box.
+* an (optional) bounding circle (lat={lat}&lng={lng}&radius={radius})
+* an (optional) bounding box (left_lower_lat={min_lat}&left_lower_lng={min_lng}&right_upper_lat={max_lat}&right_upper_lng={max_lng})
+
+### List all stations in an area [GET]
+
++ Parameters
+    + lat (number, `52.52`) ... latitude value.
+    + lng (number, `13.39`) ... longitude value.
+    + radius (number, `500`) ... radius in meter.
+   
++ Response 200 (application/json)
+
+        [
+            {
+                "id": 1,
+                "description": "Otto-Hahn-Ring 6",
+                "type": "CarSharingStation",
+                "uri": "Transportation/CarSharing/Stations/1",
+                "provider": "europecar",
+                "address": "Munich bla bla",
+                "location": "long & lat"
+            }, 
+            {
+                "id": 2,
+                "description": "Max-Weber-Platz 1",
+                "type": "CarSharingStation",
+                "uri": "Transportation/CarSharing/Stations/2",
+                "provider": "sixt",
+                "address": "Munich bla bla",
+                "location": "long & lat"
+            }
+        ]
+           
+## CarSharing StationCars [/v1/Transportation/CarSharing/Stations/{station_id}/Cars]
+This collection contains a list of all Cars available at the specific station.
+
+### List all cars at specific station [GET]
+
++ Parameters
+    + station_id (number, `1`) ... station id.
+   
++ Response 200 (application/json)
+
+        [
+            {
+                "id": 100,
+                "description": "BMW",
+                "type": "CarSharingStationCar",
+                "uri": "Transportation/CarSharing/Stations/1/Cars/100"
+            }, 
+            {
+                "id": 200,
+                "description": "Citroen",
+                "type": "CarSharingStationCar",
+                "uri": "Transportation/CarSharing/Stations/2/Cars/200"
+            }
+        ]
+
+# Group PublicTransport
+This is a group of all public transportation related resources.
+
+## PublicTransport Stations [/v1/Transportation/PublicTransport/Stations?lat={lat}&lng={lng}&radius={radius}&f_stations={f_stations}]
+This collection contains a list of stations (U-Bahn/S-Bahn/train/bus/tram/etc) in a specified area with basic information and a URI to get more details.
+The area of interest can be defined as:
+
+* an (optional) bounding circle (lat={lat}&lng={lng}&radius={radius})
+* an (optional) bounding box (left_lower_lat={min_lat}&left_lower_lng={min_lng}&right_upper_lat={max_lat}&right_upper_lng={max_lng})
+
+The optional filter `f_stations` can be used to get the stations with a particular `stationType`.
+
++ Parameters
+    + lat (number, `52.5`) ... latitude value.
+    + lng (number, `13.4`) ... longitude value.
+    + radius (number, `600`) ... radius in meter.
+    + f_stations (optional, string, `{"stationType":"BusTramStation"}`) ... filter value.
+
++ Model (application/json)
+
+    + Body
+    
+            [
+                {
+                    "id": 1,
+                    "description": "Max-Weber-Platz",
+                    "type": "PublicTransportStation",
+                    "uri": "Transportation/PublicTransport/Stations/1",
+                    "location": {
+                        "type": "Point",
+                        "coordinates": [
+                            11.58288,
+                            48.098793
+                        ]
+                    },
+                    "stationType": "TramStation",
+                    "lines": [
+                        {
+                            "name": "16",
+                            "trafficType": "Tram"
+                        },
+                        {
+                            "name": "19",
+                            "trafficType": "Tram"
+                        }
+                },
+                {
+                    "id": 2,
+                    "description": "Neu-Perlach-Süd",
+                    "type": "PublicTransportStation",
+                    "uri": "Transportation/PublicTransport/Stations/2",
+                    "location": {
+                        "type": "Point",
+                        "coordinates": [
+                            11.645127,
+                            48.088957
+                        ]
+                    },
+                    "stationType": "SubwayStation",
+                    "lines": [
+                        {
+                            "name": "U5",
+                            "trafficType": "Subway"
+                        },
+                        {
+                            "name": "U7",
+                            "trafficType": "Subway"
+                        }
+                }
+            ]    
+
+### List all PublicTransport Stations [GET]
+
++ Response 200
+
+    [PublicTransport Stations][]
+  
+   
+## PublicTransport Station [/v1/Transportation/PublicTransport/Stations/{station_id}]
+Details to a specific public transport station
+
++ Parameters
+    + station_id (number, `1`) ... station id.
+   
++ Model (application/json)
+
+    + Body
+    
+            {
+                "id": 1,
+                "description": "Max-Weber-Platz",
+                "type": "PublicTransportStation",
+                "uri": "Transportation/PublicTransport/Stations/1",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [
+                        11.58288,
+                        48.098793
+                    ]
+                },
+                "stationType": "TramStation",
+                "lines": [
+                    {
+                        "name": "16",
+                        "trafficType": "Tram"
+                    },
+                    {
+                        "name": "19",
+                        "trafficType": "Tram"
+                    }
+                ],
+                "availability": 100,
+                "wheelChair": null
+            }
+  
+
+### List PublicTransport Station Details [GET]
+
++ Response 200
+
+    [PublicTransport Station][]
+
+# Group Routing
+
+## TripProposals [/v1/Routing/TripProposals]
+This collection contains a list of trip proposals with basic information for specified trip criteria. Note: The trip proposals can be with a singlemodal, multimodal or intermodal, depending on which routing service the mobility retailer is subscribed to.
+
++ Model (application/json)
+
+    + Body
+    
+            [
+                {
+                    "url": "Routing/BikeRouting/TripProposals/1",
+                    "origin": {
+                        "location": {
+                            "type": "Point",
+                            "coordinates": [
+                                13.4113422,
+                                52.5218455
+                            ]},
+                        "address": "Dircksenstraße, 10178 Berlin, Germany",
+                        "time": "2013-07-23T13:10:00+00:00"
+                    },
+                    "destination": {
+                        "location": {
+                            "type": "Point",
+                            "coordinates": [
+                                13.3194514,
+                                52.5635387
+                            ]},
+                        "address": "Meteorstraße 40, 13405 Berlin, Germany",
+                        "time": "2013-07-23T13:43:26+00:00"
+                    },
+                    "trafficTypes": [
+                        "OwnBike"
+                    ],
+                    "description": null,
+                    "costs": {
+                        "distance": {
+                            "unit": "meter",
+                            "value": 8929
+                        },
+                        "duration": {
+                            "unit": "minute",
+                            "value": 33.43333333333333
+                        },
+                        "price": {
+                            "unit": "Euro",
+                            "value": 0
+                        },
+                        "emission": {
+                            "unit": "gram",
+                            "value": 0
+                        }
+                    }
+                },
+                {
+                    "url": "Routing/BikeRouting/TripProposals/2",
+                    "origin": {
+                        "location": {
+                            "type": "Point",
+                            "coordinates": [
+                                13.4113422,
+                                52.5218455
+                            ]
+                        },
+                        "address": "Dircksenstraße, 10178 Berlin, Germany",
+                        "time": "2013-07-23T13:10:00+00:00"
+                    },
+                    "destination": {
+                        "location": {
+                            "type": "Point",
+                            "coordinates": [
+                                13.3194514,
+                                52.5635387
+                            ]
+                        },
+                        "address": "Meteorstraße 40, 13405 Berlin, Germany",
+                        "time": "2013-07-23T15:17:54+00:00"
+                    },
+                    "trafficTypes": [
+                        "Other",
+                        "BikeSharing",
+                        "Walk"
+                    ],
+                    "description": null,
+                    "costs": {
+                        "distance": {
+                            "unit": "meter",
+                            "value": 10264
+                        },
+                        "duration": {
+                            "unit": "minute",
+                            "value": 127.9
+                        },
+                        "price": {
+                            "unit": "Euro",
+                            "value": 0.024444444444444442
+                        },
+                        "emission": {
+                            "unit": "gram",
+                            "value": 0
+                        },
+                        "ticketPrice": null
+                    }
+                },
+                {
+                    "url": "Routing/CarRouting/TripProposals/3",
+                    "origin": {
+                        "location": {
+                            "type": "Point",
+                            "coordinates": [
+                                13.07367992401123,
+                                52.39419937133789
+                            ]
+                        },
+                        "address": null,
+                        "time": "2014-03-27T13:04:40+01:00"
+                    },
+                    "destination": {
+                        "location": {
+                            "type": "Point",
+                            "coordinates": [
+                                13.319065,
+                                52.563589
+                            ]
+                        },
+                        "address": null,
+                        "time": "2014-03-27T14:48:09+01:00"
+                    },
+                    "trafficTypes": [
+                        "OwnCar"
+                    ],
+                    "description": null,
+                    "costs": {
+                        "distance": null,
+                        "duration": {
+                            "unit": "second",
+                            "value": 5947.563361271776
+                        },
+                        "price": null,
+                        "emission": null,
+                        "ticketPrice": null
+                    }
+                },
+                {
+                    "url": "/Routing/CarRouting/TripProposals/7",
+                    "origin": {
+                        "location": {
+                            "type": "Point",
+                            "coordinates": [
+                                13.07367992401123,
+                                52.39419937133789
+                            ]
+                        },
+                        "address": null,
+                        "time": "2014-03-27T13:04:40+01:00"
+                    },
+                    "destination": {
+                        "location": {
+                            "type": "Point",
+                            "coordinates": [
+                                13.319065,
+                                52.563589
+                            ]
+                        },
+                        "address": null,
+                        "time": "2014-03-27T14:48:09+01:00"
+                    },
+                    "trafficTypes": ["Walk","Bike","Car","Metro","CityTrain","Bus"],
+                    "description": null,
+                    "costs": {
+                        "distance": null,
+                        "duration": {
+                            "unit": "second",
+                            "value": 5947.563361271776
+                        },
+                        "price": null,
+                        "emission": null,
+                        "ticketPrice": null  
+                    }
+                }
+            ]    
+
+### List all TripProposals [GET]
+
++ Response 200 
+
+    [TripProposals][] 
+
+## Intermodal JourneyPlanner Providers [/v1/Routing/IMR]
+This collection contains a list of providers for intermodal JourneyPlanning
+
++ Model (application/json)
+
+    + Body
+    
+            [
+                {
+                    "id": "1",
+                    "name": "Google Transit",
+                    "type": "PublicTransport",
+                    "uri": "Routing/IMR/1"
+                }, {
+                    "id": "2",
+                    "name": "Hacon",
+                    "type": "Tracking",
+                    "uri": "Routing/IMR/1"
+                }
+            ]
+
+### List all Intermodal JourneyPlanner Providers [GET]
+
++ Response 200 
+
+    [Intermodal JourneyPlanner Providers][]       
+        
+## Intermodal JourneyPlanner Provider [/v1/Routing/IMR/{provider_id}]
+This collection contains details to a specific provider of intermodal JourneyPlanner
+
++ Parameters
+    + provider_id (number, `1`) - ID of Provider.
+    
++ Model (application/json)
+
+    + Body
+    
+            {
+                "id": "1",
+                "name": "Google Transit",
+                "type": "PublicTransport",
+                "uri": "Routing/IMR/1",
+                "actions": [
+                    {
+                        "name": "subscribe",
+                        "method": "POST",
+                        "uri": "just an idea! /v1/Routing/IMR/1/Process?action=subscribe"
+                    }
+                ]
+            }
+    
+### List Intermodal JourneyPlanner Provider Details [GET]
+
++ Response 200 
+
+    [Intermodal JourneyPlanner Provider][]     
+        
+
+# Group PartnerMgt API
+API related to Partner Management
+
+## Partners [/v1/Partners]
+This collection contains a list of CML Partners
+
+### List all Partners [GET]
+
++ Response 200 (application/json)
+
+        [
+            {
+                "id": "1",
+                "name": "Some Partner 1",
+                "uri": "Partners/1",
+                "type": "MobilityRetailer"
+            }, {
+                "id": "2",
+                "name": "Some Partner 2",
+                "uri": "Partners/2",
+                "type": "MobilityRetailer"
+            }, {
+                "id": "3",
+                "name": "BMW",
+                "uri": "Partners/3",
+                "type": "Service Provider"
+            }, {
+                "id": "4",
+                "name": "VW",
+                "uri": "Partners/4",
+                "type": "Service Provider"
+            }
+        ]
+        
+## Partner Details [/v1/Partners/{partner_id}]
+Details to a specific CML Partner
+
++ Parameters
+    + partner_id (number, `1`) ... partner id.
+
+### List Partner Details [GET]
+
++ Response 200 (application/json)
+
+        {
+            "id": "4",
+            "name": "VW",
+            "type": "Service Provider",
+            "subscriptions": "Partners/4/Subscriptions",
+            "offerings": "Partners/4/Offerings"
+        }
